@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: smart-campus
+
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    url: jdbc:sqlite:./smart-campus.db
+    driver-class-name: org.sqlite.JDBC
+    username: ""
+    password: ""
+
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
+server:
+  port: 8080
+
+app:
+  cors:
+    allowed-origins: http://localhost:5173
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration-ms: 86400000
